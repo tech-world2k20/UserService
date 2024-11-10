@@ -9,9 +9,10 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class UserServiceApplication {
 
+	// new changes
 	@GetMapping("/")
 	public String welcome(){
-		return "Welcome";
+		return "hello";
 	}
 
 
