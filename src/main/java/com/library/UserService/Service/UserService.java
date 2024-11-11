@@ -1,4 +1,14 @@
 package com.library.UserService.Service;
 
-public class UserService {
+import com.library.UserService.Dto.UserDto;
+
+import java.util.List;
+
+public interface UserService {
+
+
+    public List<UserDto> getAllUsers();
+
+
+
 }
