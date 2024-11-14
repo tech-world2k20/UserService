@@ -2,9 +2,14 @@ package com.library.UserService.Controller;
 
 
 
+import com.library.UserService.Dto.UserDto;
 import com.library.UserService.Entity.User;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RestController;
+import com.library.UserService.Exception.UserNotFoundException;
+import com.library.UserService.Service.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,8 +17,35 @@ import java.util.List;
 @RestController
 public class UserController {
 
+    @Autowired
+    private UserService userService;
+
     @GetMapping("/getAllUsers")
-    public List<User> getAllUserDetails(){
+    public List<UserDto> getAllUserDetails(){
         return new ArrayList<>();
+    }
+
+    @GetMapping("/getUserById/{id}")
+    public ResponseEntity<User> getUserById(@PathVariable Integer id){
+        User ut = userService.getUserByid(id);
+        if(ut==null) throw new UserNotFoundException("User is not present");
+        return new ResponseEntity<>(ut,HttpStatus.OK);
+    }
+
+    @PostMapping("/createUser")
+    public ResponseEntity<User> createUser(@RequestBody User user){
+        User user1 = userService.addUser(user);
+        return new ResponseEntity<>(user1,HttpStatus.CREATED);
+    }
+
+    @DeleteMapping("/deleteUser/{id}")
+    public ResponseEntity<String> deleteUser(@PathVariable int id){
+        try{
+            userService.deleteUser(id);
+            return new ResponseEntity<>("User is Deleted successfully",HttpStatus.OK);
+        }
+        catch(UserNotFoundException e){
+            return new ResponseEntity<>(e.getMessage(),HttpStatus.NOT_FOUND);
+        }
     }
 }
