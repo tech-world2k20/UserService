@@ -7,19 +7,19 @@ import com.library.UserService.Service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 @Service
 public class UserServiceImpl implements UserService {
+
     @Autowired
     private UserRepo userRepo;
 
-    public UserServiceImpl() {
-    }
-
     public List<User> getAllUsers() {
-        return List.of();
+        List<User> all = userRepo.findAll();
+        return all!=null? all: new ArrayList<>();
     }
 
     public User getUserByid(Integer id) {
@@ -33,7 +33,15 @@ public class UserServiceImpl implements UserService {
     }
 
     public User updateUser(User user) {
-        return null;
+        User userExist = getUserByid(user.getId());
+        if(userExist!=null){
+            userExist.setUserName(user.getUserName()!=null?user.getUserName():userExist.getUserName());
+            userExist.setPassword(user.getPassword()!=null?user.getPassword():userExist.getPassword());
+            userExist.setEmail(user.getEmail()!=null?user.getEmail(): userExist.getEmail());
+            userExist.setMobile(user.getMobile()!=null?user.getMobile(): userExist.getMobile());
+            userExist.setRole(user.getRole()!=null?user.getRole():userExist.getRole());
+        }
+        return userExist;
     }
 
     public void deleteUser(Integer id) {
